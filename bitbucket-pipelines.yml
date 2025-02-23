@@ -1,0 +1,58 @@
+image: atlassian/default-image:latest
+
+definitions:
+  services:
+    docker:
+      memory: 12288
+  steps:
+    - step: &publish-step
+        name: Mobile App Publish
+        size: 4x
+        max-time: 20
+        script:
+          - apt-get update && apt-get install -y jq
+          - chmod +x ./mobile-app-publish.sh
+          - ./mobile-app-publish.sh $APP_ID $ENTITLEMENT_KEY $ENVIRONMENT_URL $API_KEY $MAFTOOLS_VERSION
+        artifacts:
+          - build/**
+        services:
+          - docker
+
+pipelines:
+  custom:
+    mobile-publish-dev:
+      - variables:
+        - name: APP_ID
+          default: "TECHMOBILE"
+          allowed-values:
+            - "TECHMOBILE"
+            - "SRMOBILE"
+            - "INSPECTION"
+            - "IRMOBILE"
+      - step:
+          <<: *publish-step
+          deployment: DEV
+    mobile-publish-test:
+      - variables:
+        - name: APP_ID
+          default: "TECHMOBILE"
+          allowed-values:
+            - "TECHMOBILE"
+            - "SRMOBILE"
+            - "INSPECTION"
+            - "IRMOBILE"
+      - step:
+          <<: *publish-step
+          deployment: TEST
+    mobile-publish-prod:
+      - variables:
+        - name: APP_ID
+          default: "TECHMOBILE"
+          allowed-values:
+            - "TECHMOBILE"
+            - "SRMOBILE"
+            - "INSPECTION"
+            - "IRMOBILE"
+      - step:
+          <<: *publish-step
+          deployment: PROD
