@@ -75,16 +75,10 @@ mobile-publish-prod:
 
 This script automates the process of publishing a mobile application to the Maximo Manage server using the Maximo Application Framework (MAF) tools.
 
-## Prerequisites
-
-- Docker installed and running
-- IBM Cloud Registry credentials
-- Required environment variables
-
 ## Usage
 
 ```bash
-./mobile-app-publish.txt <appid> <entitlementkey> <environment> <apikey> <maftoolversion>
+./mobile-app-publish.sh <appid> <entitlementkey> <environment> <apikey> <maftoolversion>
 ```
 
 ### Parameters
