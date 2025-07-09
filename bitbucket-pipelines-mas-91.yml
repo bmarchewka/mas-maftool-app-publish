@@ -1,0 +1,57 @@
+image: python:3.13-slim
+
+definitions:
+  steps:
+    - step: &publish-step
+        name: Mobile App Publish
+        max-time: 20
+        script:
+          - python -m venv maftool && . maftool/bin/activate
+          - pip install requests jmespath
+          - python ./mobile-app-publish.py --masAuthUrl $MAS_AUTH_URL --masApiUrl $MAS_API_URL --appId $APP_ID --appConfigUrl $APP_CONFIG_URL --appConfigUsername $APP_CONFIG_USERNAME --appConfigPassword $APP_CONFIG_PASSWORD
+        artifacts:
+          - build/**
+        services:
+          - docker
+
+pipelines:
+  custom:
+    mobile-publish-dev:
+      - variables:
+        - name: APP_ID
+          default: "TECHMOBILE"
+          allowed-values:
+            - "TECHMOBILE"
+            - "SRMOBILE"
+            - "INSPECTION"
+            - "IRMOBILE"
+            - "ICMOBILE"
+      - step:
+          <<: *publish-step
+          deployment: DEV
+    mobile-publish-test:
+      - variables:
+        - name: APP_ID
+          default: "TECHMOBILE"
+          allowed-values:
+            - "TECHMOBILE"
+            - "SRMOBILE"
+            - "INSPECTION"
+            - "IRMOBILE"
+            - "ICMOBILE"
+      - step:
+          <<: *publish-step
+          deployment: TEST
+    mobile-publish-prod:
+      - variables:
+        - name: APP_ID
+          default: "TECHMOBILE"
+          allowed-values:
+            - "TECHMOBILE"
+            - "SRMOBILE"
+            - "INSPECTION"
+            - "IRMOBILE"
+            - "ICMOBILE"
+      - step:
+          <<: *publish-step
+          deployment: PROD
