@@ -2,9 +2,9 @@
 mobile-app-publish.py
 Author: Bartosz Marchewka
 Version: 1.0.0
-This script automates the process of publishing a mobile application configuration using the MAF-Tool and MAS APIs. It performs the following steps:
+This script automates the process of publishing a mobile application configuration using the MAS Application Configuration and MAS APIs. It performs the following steps:
 1. Parses required command-line arguments for authentication and configuration.
-2. Authenticates to the Application Configurator (MAF-Tool) using provided credentials.
+2. Authenticates to the MAS Application Configuration using provided credentials.
 3. Retrieves user profile information to extract the workspace ID.
 4. Redownloads the latest application definition to ensure local changes are overwritten.
 5. Creates a zip archive of customized files from the repository.
@@ -108,8 +108,8 @@ def authenticate():
     maf_tool_login_response = session.get(app_config_url)
     logging.info(f"Application configuration page status code: {maf_tool_login_response.status_code}")
     if maf_tool_login_response.status_code != 200:
-        logging.error(f"Failed to connect to application configuration (MAF-Tool): {maf_tool_login_response.status_code} - {maf_tool_login_response.text}")
-        raise Exception(f"Failed to connect to application configuration (MAF-Tool): {maf_tool_login_response.status_code}")
+        logging.error(f"Failed to connect to MAS Application Configuration: {maf_tool_login_response.status_code} - {maf_tool_login_response.text}")
+        raise Exception(f"Failed to connect to MAS Application Configuration: {maf_tool_login_response.status_code}")
     auth_url = f"{mas_auth_url}/js/j_security_check"
     auth_data = {
         "j_username": app_config_username,
@@ -205,9 +205,9 @@ def publishApplication():
     
 
 # -------------------------------------------------------------------------------------------
-# 1. Authenticate to Application Configurator (MAF-TOOL).
+# 1. Authenticate to MAS Application Configuration
 # -------------------------------------------------------------------------------------------
-logging.info("-01- Authenticate to Application Configurator (MAF-Tool)")
+logging.info("-01- Authenticate to MAS Application Configuration")
 authenticate()
 
 # -------------------------------------------------------------------------------------------
@@ -235,9 +235,9 @@ zip_output_path = createZipFileWithCustomisations()
 logging.info(f"Created zip archive at: {zip_output_path}")
 
 # -------------------------------------------------------------------------------------------
-# 5. Upload zip file to Application Configurator (MAF-TOOL).
+# 5. Upload zip file to MAS Application Configuration
 # -------------------------------------------------------------------------------------------
-logging.info("-05- Uploading zip file to Application Configurator (MAF-Tool)")
+logging.info("-05- Uploading zip file to MAS Application Configuration")
 uploadZipFile()
 
 # -------------------------------------------------------------------------------------------
